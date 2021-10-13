@@ -2,6 +2,7 @@
 const Database = use('Database');
 const Technology = use('App/Models/Technology');
 const Idea = use('App/Models/Idea');
+const Challenge = use('App/Models/Challenge');
 const Service = use('App/Models/Service');
 const Announcement = use('App/Models/Announcement');
 const Institution = use('App/Models/Institution');
@@ -17,6 +18,7 @@ class AlgoliaIndex extends Command {
 		this.algoliaTechnologies = Algolia.initIndex('technology');
 		this.algoliaServices = Algolia.initIndex('service');
 		this.algoliaIdeas = Algolia.initIndex('idea');
+		this.algoliaChallenges = Algolia.initIndex('challenge');
 		this.algoliaAnnouncements = Algolia.initIndex('announcement');
 		this.algoliaInstitutions = Algolia.initIndex('institution');
 	}
@@ -52,6 +54,7 @@ class AlgoliaIndex extends Command {
 		const successfullyIntegrated = {
 			technology: 0,
 			idea: 0,
+			challenge: 0,
 			service: 0,
 			announcement: 0,
 			institution: 0,
@@ -66,6 +69,7 @@ class AlgoliaIndex extends Command {
 					.available()
 					.getCount(),
 				Idea.getCount(),
+				Challenge.getCount(),
 				Service.getCount(),
 				Announcement.query()
 					.published()
@@ -114,6 +118,25 @@ class AlgoliaIndex extends Command {
 			if (data.length) {
 				await Algolia.saveIndex('idea', data, { saveMany: true });
 				successfullyIntegrated.idea += data.length;
+				progressBar.increment(data.length);
+			}
+
+			({ lastPage } = pages);
+		} while (page <= lastPage);
+
+		// Index Challenges
+		page = 0;
+		do {
+			page += 1;
+			const challenges = await Challenge.query()
+				.populateForAlgolia()
+				.paginate(page);
+			const { pages } = challenges;
+			const { data } = challenges.toJSON();
+
+			if (data.length) {
+				await Algolia.saveIndex('challenge', data, { saveMany: true });
+				successfullyIntegrated.challenge += data.length;
 				progressBar.increment(data.length);
 			}
 
@@ -255,6 +278,7 @@ class AlgoliaIndex extends Command {
 				this.algoliaTechnologies.clearObjects(),
 				this.algoliaServices.clearObjects(),
 				this.algoliaIdeas.clearObjects(),
+				this.algoliaChallenges.clearObjects(),
 				this.algoliaAnnouncements.clearObjects(),
 				this.algoliaInstitutions.clearObjects(),
 			]);
@@ -281,6 +305,7 @@ class AlgoliaIndex extends Command {
 				'searchable(keywords)',
 			],
 			ideas: ['searchable(keywords)'],
+			challenges: ['searchable(keywords)'],
 			announcements: ['searchable(keywords)'],
 			institutions: [
 				'searchable(category)',
@@ -294,6 +319,7 @@ class AlgoliaIndex extends Command {
 			technologies: ['desc(likes)'],
 			services: ['desc(likes)'],
 			ideas: [],
+			challenges: [],
 			announcements: [],
 			institutions: [],
 		};
@@ -326,6 +352,20 @@ class AlgoliaIndex extends Command {
 					column: 'created_at',
 					strategy: 'desc',
 					attributesForFaceting: attributesForFaceting.ideas,
+				},
+			],
+			challenges: [
+				{
+					name: `${indexes.challenge.indexName}_created_at_asc`,
+					column: 'created_at',
+					strategy: 'asc',
+					attributesForFaceting: attributesForFaceting.challenges,
+				},
+				{
+					name: `${indexes.challenge.indexName}_created_at_desc`,
+					column: 'created_at',
+					strategy: 'desc',
+					attributesForFaceting: attributesForFaceting.challenges,
 				},
 			],
 			announcements: [
@@ -373,6 +413,7 @@ class AlgoliaIndex extends Command {
 			],
 			services: ['name', 'type', 'institution', 'keywords'],
 			ideas: ['title', 'description', 'keywords'],
+			challenges: ['title', 'description', 'keywords'],
 			announcements: ['title', 'description', 'keywords'],
 			institutions: ['name', 'initials', 'category'],
 		};
@@ -414,6 +455,13 @@ class AlgoliaIndex extends Command {
 					searchableAttributes: searchableAttributes.ideas,
 					attributesForFaceting: attributesForFaceting.ideas,
 					customRanking: customRanking.ideas,
+				},
+				challenges: {
+					algolia: this.algoliaChallenges,
+					replicas: replicas.challenges.map((replica) => replica.name),
+					searchableAttributes: searchableAttributes.challenges,
+					attributesForFaceting: attributesForFaceting.challenges,
+					customRanking: customRanking.challenges,
 				},
 				announcements: {
 					algolia: this.algoliaAnnouncements,

@@ -44,6 +44,12 @@ module.exports = {
 				'APP_ENV',
 			)}`,
 		},
+		challenge: {
+			indexName: `${Env.get('ALGOLIA_INDEX_PREFIX')}_challenges_${Env.get('APP_ENV')}`,
+			querySuggestions: `${Env.get('ALGOLIA_INDEX_PREFIX')}_challenges_query_suggestions_${Env.get(
+				'APP_ENV',
+			)}`,
+		},
 		service: {
 			indexName: `${Env.get('ALGOLIA_INDEX_PREFIX')}_services_${Env.get('APP_ENV')}`,
 			querySuggestions: `${Env.get(
