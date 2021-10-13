@@ -274,6 +274,23 @@ const PERMISSIONS = {
 		permission: 'delete-ideas',
 		description: 'Permite excluir as ideias de qualquer usuário no sistema',
 	},
+	// Challenges
+	UPDATE_CHALLENGE: {
+		permission: 'update-challenge',
+		description: 'Permite editar a desafio do próprio usuário no sistema',
+	},
+	UPDATE_CHALLENGES: {
+		permission: 'update-challenges',
+		description: 'Permite editar as desafios de qualquer usuário no sistema',
+	},
+	DELETE_CHALLENGE: {
+		permission: 'delete-challenge',
+		description: 'Permite excluir a desafio do próprio usuário no sistema',
+	},
+	DELETE_CHALLENGES: {
+		permission: 'delete-challenges',
+		description: 'Permite excluir as desafios de qualquer usuário no sistema',
+	},
 	// Services
 	UPDATE_SERVICE: {
 		permission: 'update-service',
@@ -359,6 +376,8 @@ const DEFAULT_USER = [
 	PERMISSIONS.DELETE_BOOKMARK,
 	PERMISSIONS.LIST_TECHNOLOGY_COMMENTS,
 	PERMISSIONS.UPDATE_TECHNOLOGY_ACTIVE,
+	PERMISSIONS.UPDATE_CHALLENGE,
+	PERMISSIONS.DELETE_CHALLENGE,
 ];
 const RESEARCHER = [
 	...DEFAULT_USER,

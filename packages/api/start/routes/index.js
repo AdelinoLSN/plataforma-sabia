@@ -54,5 +54,6 @@ require('./technologyReviews');
 require('./terms');
 require('./uploads');
 require('./users');
+require('./challenges');
 
 Route.get('/', 'AppController.index');

@@ -141,6 +141,17 @@ class PermissionSeeder {
 			permissions.DELETE_IDEAS,
 		]);
 
+		/** CHALLENGE MANAGEMENT */
+		const challengePermissions = await Permission.createMany([
+			permissions.UPDATE_CHALLENGE,
+			permissions.DELETE_CHALLENGE,
+		]);
+		/** CHALLENGE ADMIN MANAGEMENT */
+		const challengesPermissions = await Permission.createMany([
+			permissions.UPDATE_CHALLENGES,
+			permissions.DELETE_CHALLENGES,
+		]);
+
 		/** ANNOUNCEMENT MANAGEMENT */
 		const announcementPermissions = await Permission.createMany([
 			permissions.UPDATE_ANNOUNCEMENT,
@@ -211,6 +222,7 @@ class PermissionSeeder {
 			...technologyQuestionPermissions,
 			...announcementsPermissions,
 			...ideasPermissions,
+			...challengesPermissions,
 			...servicesPermissions,
 			...serviceOrdersPermissions,
 			...serviceOrderReviewPermissions,
@@ -241,6 +253,7 @@ class PermissionSeeder {
 			...technologyQuestionPermissions,
 			...announcementPermissions,
 			...ideaPermissions,
+			...challengePermissions,
 			...servicePermissions,
 			...serviceOrderPermissions,
 			...serviceOrderReviewPermissions,

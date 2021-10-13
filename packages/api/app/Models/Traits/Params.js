@@ -29,6 +29,7 @@ class Params {
 				'announcements',
 				'messages',
 				'ideas',
+				'challenges',
 				'orders',
 				'services',
 				'serviceOrders',
@@ -64,6 +65,7 @@ class Params {
 			service_order_reviews: ['serviceOrder', 'user'],
 			reviewer_technology_history: ['reviewer', 'technology'],
 			locations: ['city'],
+			challenges: ['user', 'terms'],
 		};
 		const listOrder = ['asc', 'desc'];
 		const listOrderBy = {
@@ -153,6 +155,7 @@ class Params {
 			],
 			messages: ['id', 'user_id', 'subject', 'content', 'created_at', 'updated_at'],
 			ideas: ['id', 'title', 'description', 'user_id', 'created_at', 'updated_at'],
+			challenges: ['id', 'title', 'description', 'user_id', 'created_at', 'updated_at'],
 			services: [
 				'id',
 				'name',
