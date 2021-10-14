@@ -9,6 +9,10 @@ export default {
 		default: `${ALGOLIA_INDEX_PREFIX}_ideas`,
 		suggestions: `${ALGOLIA_INDEX_PREFIX}_ideas_query_suggestions`,
 	},
+	challenge: {
+		default: `${ALGOLIA_INDEX_PREFIX}_challenges`,
+		suggestions: `${ALGOLIA_INDEX_PREFIX}_challenges_query_suggestions`,
+	},
 	service: {
 		default: `${ALGOLIA_INDEX_PREFIX}_services`,
 		suggestions: `${ALGOLIA_INDEX_PREFIX}_services_query_suggestions`,

@@ -26,6 +26,7 @@ export const internal = {
 	newService: '/service/new',
 	newSolution: '/solution/new',
 	ideas: '/ideias',
+	challenges: '/desafios',
 	announcements: '/editais',
 	showcase: '/vitrines',
 	institutionShowcase: '/vitrine/:institution',

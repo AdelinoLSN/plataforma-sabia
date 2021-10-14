@@ -58,6 +58,11 @@ export const defaultLinks = [
 				href: internalPages.ideas,
 			},
 			{
+				id: 41,
+				label: 'Desafios Tecnológicos',
+				href: internalPages.challenges,
+			},
+			{
 				id: 5,
 				label: 'Banco de Editais',
 				href: internalPages.announcements,
@@ -150,6 +155,11 @@ export const aboutLinks = [
 				id: 4,
 				label: 'Banco de Ideias',
 				href: internalPages.ideas,
+			},
+			{
+				id: 41,
+				label: 'Desafios Tecnológicos',
+				href: internalPages.challenges,
 			},
 			{
 				id: 5,
