@@ -34,6 +34,7 @@ const mappingOperationsChecking = {
 	can_be_curator: ['check_personal_data', 'check_academic_data', 'check_organizational_data'],
 	can_create_announcement: ['check_personal_data'],
 	can_create_idea: ['check_personal_data'],
+	can_create_challenge: ['check_personal_data'],
 	can_create_service: ['check_personal_data', 'check_organizational_data'],
 	can_create_service_order: ['check_personal_data'],
 	can_buy_technology: ['check_personal_data'],
@@ -266,6 +267,10 @@ class User extends Model {
 
 	ideas() {
 		return this.hasMany('App/Models/Idea');
+	}
+
+	challenges() {
+		return this.hasMany('App/Models/Challenge');
 	}
 
 	orders() {

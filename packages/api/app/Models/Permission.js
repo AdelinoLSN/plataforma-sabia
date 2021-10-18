@@ -10,6 +10,7 @@ const Institution = use('App/Models/Institution');
 const TechnologyQuestion = use('App/Models/TechnologyQuestion');
 const Announcement = use('App/Models/Announcement');
 const Idea = use('App/Models/Idea');
+const Challenge = use('App/Models/Challenge');
 const Service = use('App/Models/Service');
 const ServiceOrder = use('App/Models/ServiceOrder');
 const ServiceOrderReview = use('App/Models/ServiceOrderReview');
@@ -241,6 +242,16 @@ class Permission extends Model {
 		) {
 			const idea = await Idea.findOrFail(id);
 			if (idea.user_id !== user.id) {
+				return false;
+			}
+		}
+
+		/** Individual Challenge Permissions */
+		if (
+			matchesPermission([permissions.UPDATE_CHALLENGE, permissions.DELETE_CHALLENGE], matchedPermission)
+		) {
+			const challenge = await Challenge.findOrFail(id);
+			if (challenge.user_id !== user.id) {
 				return false;
 			}
 		}
