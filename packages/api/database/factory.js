@@ -234,6 +234,14 @@ Factory.blueprint('App/Models/Idea', async (faker, i, data) => {
 	};
 });
 
+Factory.blueprint('App/Models/Challenge', async (faker, i, data) => {
+	return {
+		title: faker.sentence({ words: 5 }),
+		description: faker.sentence({ words: 10 }),
+		...data,
+	};
+});
+
 Factory.blueprint('App/Models/Service', async (faker, i, data) => {
 	return {
 		name: faker.sentence({ words: 5 }),
