@@ -24,16 +24,53 @@ test('GET /challenges returns all challenges', async ({ client }) => {
 	response.assertJSONSubset(challenges.toJSON());
 });
 
-test('GET /challenges/:id returns an challenge', async ({ client }) => {
+test('GET /challenges/:id return an approved challenge', async ({ client }) => {
 	const user = await Factory.model('App/Models/User').create();
 	const challenge = await Factory.model('App/Models/Challenge').create({
 		user_id: user.id,
+		status: 'approved',
 	});
 
 	const response = await client.get(`/challenges/${challenge.id}`).end();
 
 	response.assertStatus(200);
 	response.assertJSONSubset(challenge.toJSON());
+});
+
+test('GET /challenges/:id returns an unapproved challenge if user is owner', async ({ client }) => {
+	const user = await Factory.model('App/Models/User').create();
+	const challenge = await Factory.model('App/Models/Challenge').create({
+		user_id: user.id,
+	});
+
+	const response = await client
+		.get(`/challenges/${challenge.id}`)
+		.loginVia(user, 'jwt')
+		.end();
+
+	response.assertStatus(200);
+	response.assertJSONSubset(challenge.toJSON());
+});
+
+test('GET /challenges/:id returns an error 403 if is an unapproved challenge and user is not owner', async ({
+	client,
+}) => {
+	const user = await Factory.model('App/Models/User').create();
+	const userNotOwner = await Factory.model('App/Models/User').create();
+	const challenge = await Factory.model('App/Models/Challenge').create({
+		user_id: user.id,
+	});
+
+	const responseUnauthenticated = await client.get(`/challenges/${challenge.id}`).end();
+
+	responseUnauthenticated.assertStatus(403);
+
+	const responseAuthenticated = await client
+		.get(`/challenges/${challenge.id}`)
+		.loginVia(userNotOwner, 'jwt')
+		.end();
+
+	responseAuthenticated.assertStatus(403);
 });
 
 test('POST /challenges creates a new challenge', async ({ client, assert }) => {
