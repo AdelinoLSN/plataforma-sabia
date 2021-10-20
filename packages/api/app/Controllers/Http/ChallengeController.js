@@ -92,6 +92,7 @@ class ChallengeController {
 			throw error;
 		}
 
+		await challenge.reload();
 		return challenge;
 	}
 
