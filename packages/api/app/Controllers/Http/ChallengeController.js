@@ -4,6 +4,8 @@ const { getTransaction, errorPayload, errors, Algolia } = require('../../Utils')
 
 const algoliaIndexName = 'challenge';
 
+const UnauthorizedException = use('App/Exceptions/UnauthorizedException');
+
 async function algoliaPopulatedQuery(id) {
 	return Challenge.query()
 		.populateForAlgolia(id)
@@ -11,18 +13,42 @@ async function algoliaPopulatedQuery(id) {
 }
 
 class ChallengeController {
-	async index({ request }) {
+	async index({ request, auth }) {
+		const challenges = Challenge.query();
+		try {
+			await auth.check();
+			const user = await auth.getUser();
+			const userRole = await user.getRole();
+			challenges.available(user, userRole);
+		} catch (err) { 
+			challenges.available();
+		}
+
 		const filters = request.all();
-		return Challenge.query()
+
+		return challenges
 			.with('keywords')
 			.withFilters(filters)
 			.withParams(request);
 	}
 
-	async show({ request }) {
-		return Challenge.query()
+	async show({ request, auth }) {
+		const challenge = await Challenge.query()
 			.with('keywords')
 			.withParams(request);
+
+		if (!(await Challenge.isChallengeApproved(challenge))) {
+			try {
+				const user = await auth.getUser();
+				if (!(await Challenge.canAccessUnApprovedChallenge(challenge, user))) {
+					throw new UnauthorizedException();
+				}
+			} catch (err) { 
+				throw new UnauthorizedException();
+			}
+		}
+
+		return challenge;
 	}
 
 	async syncronizeTerms(trx, keywords, challenge, detach = false) {

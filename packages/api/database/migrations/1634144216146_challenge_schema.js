@@ -8,6 +8,10 @@ class ChallengeSchema extends Schema {
 			table.string('title').notNullable();
 			table.text('description').notNullable();
 			table
+				.enu('status', ['pending', 'approved', 'rejected'])
+				.defaultTo('pending')
+				.notNullable();
+			table
 				.integer('user_id')
 				.unsigned()
 				.references('id')

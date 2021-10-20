@@ -1,6 +1,8 @@
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Model = use('Model');
 
+const { roles } = require('../Utils/roles_capabilities');
+
 class Challenge extends Model {
 	static boot() {
 		super.boot();
@@ -35,6 +37,21 @@ class Challenge extends Model {
 		return query;
 	}
 
+	/**
+	 * Query scope to get the published tecnologies
+	 *
+	 * @param {object} query The query object.
+	 * @param {object} user User object
+	 * @param {string} userRole User Role
+	 * @returns {object}
+	 */
+	static scopeAvailable(query, user = null, userRole = null) {
+		if (!user || userRole !== roles.ADMIN) {
+			return query.where({ status: 'approved' });
+		}
+		return query;
+	}
+
 	static scopePopulateForAlgolia(query, id) {
 		if (id) {
 			query.where({ id });
@@ -63,6 +80,24 @@ class Challenge extends Model {
 
 	keywords() {
 		return this.belongsToMany('App/Models/Term').withFilters({ taxonomy: 'keywords' });
+	}
+
+	static async isChallengeApproved(challenge) {
+		return challenge.status === 'approved';
+	}
+
+	async checkOwner(user) {
+		return user.id === this.user_id;
+	}
+
+	static async canAccessUnApprovedChallenge(challenge, user) {
+		const userRole = await user.getRole();
+		if (userRole === roles.ADMIN) return true;
+
+		const isOwner = await challenge.checkOwner(user);
+		if (isOwner) return true;
+
+		return false;
 	}
 }
 
