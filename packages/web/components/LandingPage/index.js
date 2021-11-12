@@ -7,6 +7,7 @@ export { default as Contact } from './Contact';
 export { default as Button } from './Button';
 export { default as ListItems } from './ListItems';
 export { default as RegisterIdea } from './RegisterIdea';
+export { default as RegisterChallenge } from './RegisterChallenge';
 export { default as IdeaCard } from './IdeaCard';
 export { default as AnnouncementCard } from './AnnouncementCard';
 export { default as RegisterAnnouncement } from './RegisterAnnouncement';
